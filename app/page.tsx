@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import {
   Anvil,
   ArrowRight,
@@ -21,7 +22,11 @@ const navItems = [
   { label: 'Precios', href: '#precios' },
 ]
 
-const integrations = ['Shopify', 'TiendaNube', 'Google Analytics']
+const integrations = [
+  { name: 'Shopify', logo: '/Shopify.png' },
+  { name: 'TiendaNube', logo: '/tiendanube.png' },
+  { name: 'Google Analytics', logo: '/Google.png' },
+]
 
 const plans = [
   {
@@ -171,13 +176,13 @@ function HeroSection() {
         </div>
       </div>
 
-      <div className="mx-auto mt-12 flex max-w-2xl flex-wrap items-center justify-center gap-x-7 gap-y-3 text-center font-mono text-[10px] uppercase tracking-widest text-white/30">
-        <span>+€2.4M generados</span>
+      {<div className="mx-auto mt-12 flex max-w-2xl flex-wrap items-center justify-center gap-x-7 gap-y-3 text-center font-mono text-[10px] uppercase tracking-widest text-white/30">
+        <span>Genera clientes</span>
         <span className="hidden h-1 w-1 rounded-full bg-white/20 sm:block" />
-        <span>+340 tiendas activas</span>
+        <span>Recupera Ganancia</span>
         <span className="hidden h-1 w-1 rounded-full bg-white/20 sm:block" />
-        <span>4.9/5 satisfacción</span>
-      </div>
+        <span>Crea Reputación</span>
+      </div>}
     </section>
   )
 }
@@ -271,18 +276,22 @@ function IntegrationsSection() {
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {integrations.map((name, index) => (
+            {integrations.map((integration) => (
               <div
-                key={name}
-                className="flex h-20 items-center gap-3 rounded-xl border border-white/8 bg-white/2.5 px-4 transition-colors hover:border-primary/30 hover:bg-primary/4"
+                key={integration.name}
+                className="group relative flex h-20 items-center gap-3 overflow-hidden rounded-xl border border-white/8 bg-white/2.5 px-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/35 hover:bg-primary/4 hover:shadow-[0_12px_24px_-16px_rgba(251,146,60,0.95)]"
               >
-                <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg font-mono text-xs font-bold ${index % 2 === 0 ? 'bg-primary/15 text-primary' : 'bg-white/8 text-white/55'
-                    }`}
-                >
-                  {name.slice(0, 1)}
+                <span className="pointer-events-none absolute inset-x-5 bottom-0 h-px bg-primary opacity-0 blur-[3px] transition-opacity duration-300 group-hover:opacity-100" />
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/8 p-1.5">
+                  <Image
+                    src={integration.logo}
+                    alt={`${integration.name} logo`}
+                    width={32}
+                    height={32}
+                    className="h-full w-full object-contain"
+                  />
                 </span>
-                <span className="text-sm font-medium text-white/70">{name}</span>
+                <span className="text-sm font-medium text-white/70">{integration.name}</span>
               </div>
             ))}
           </div>

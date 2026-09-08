@@ -7,7 +7,7 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 export const metadata: Metadata = {
-  title: 'Fuccina — Más ventas. Menos fricción.',
+  title: 'Fuccina - Forja el futuro de tu negocio',
   description: 'La infraestructura invisible para hacer crecer tu e-commerce. Recupera ventas y construye reputación con Fuccina.',
   generator: 'v0.app',
 }
