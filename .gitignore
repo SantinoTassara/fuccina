@@ -1,0 +1,46 @@
+# v0 sandbox internal files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
+.vercel/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env*.example
+.env*.local
+
+# Dependencies and build output
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+turbopack/
+
+# Logs and runtime files
+*.log
+logs/
+*.pid
+*.pid.lock
+
+# Test and tooling caches
+.cache/
+.turbo/
+.eslintcache
+.tsbuildinfo
+
+# Deployment and editor metadata
+.vercel/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
