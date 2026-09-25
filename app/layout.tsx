@@ -3,18 +3,20 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
 import { MotionProvider } from '@/components/site/motion'
+import { StructuredData } from '@/components/site/structured-data'
+import { SITE } from '@/lib/site'
 
 import './globals.css'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
-/** Dominio de producción. Sin esto, Next.js no puede resolver las URLs
- *  relativas de `alternates.canonical` y de Open Graph. */
-const SITE_URL = 'https://fuccina.com.ar'
-
+/** El dominio sale de `lib/site.ts`, la misma fuente que usan el sitemap, el
+ *  robots.txt y el JSON-LD. Verificá ahí si cambia la URL de producción. */
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  // Sin `metadataBase`, Next.js no puede resolver las URLs relativas del
+  // canonical y de Open Graph.
+  metadataBase: new URL(SITE.url),
   title: 'Fuccina - Forja el futuro de tu negocio',
   description: 'La infraestructura invisible para hacer crecer tu e-commerce. Recupera ventas y construye reputación con Fuccina.',
   generator: 'Next.js 16',
@@ -23,21 +25,19 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'es_AR',
-    url: SITE_URL,
-    siteName: 'Fuccina',
-    title: 'Fuccina - La infraestructura invisible de tu crecimiento',
-    description:
-      'Recuperá los carritos que ya se habían perdido, construí reputación y escalá tu e-commerce. Slancio y Faro, dos motores con un mismo objetivo.',
+    locale: SITE.locale,
+    url: SITE.url,
+    siteName: SITE.name,
+    title: `${SITE.name} - ${SITE.tagline}`,
+    description: SITE.description,
   },
   twitter: {
     // `summary_large_image`, no `summary`: con la imagen de 1200x630 en su
     // lugar, `summary` la muestra chica en la timeline y desperdicia el
     // formato. Si algún día se saca `opengraph-image`, hay que volver a `summary`.
     card: 'summary_large_image',
-    title: 'Fuccina - La infraestructura invisible de tu crecimiento',
-    description:
-      'Recuperá los carritos que ya se habían perdido, construí reputación y escalá tu e-commerce.',
+    title: `${SITE.name} - ${SITE.tagline}`,
+    description: SITE.description,
   },
 }
 
@@ -66,6 +66,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <noscript>
           <style>{'[data-motion-hidden]{opacity:1!important;transform:none!important}'}</style>
         </noscript>
+
+        <StructuredData />
 
         <MotionProvider>{children}</MotionProvider>
 

@@ -258,6 +258,9 @@ app/
   page.tsx              # Server Component: compone las secciones, sin JS propio
   globals.css           # tokens de tema + utilidades de marca + escala de movimiento
   icon.svg
+  opengraph-image.tsx   # imagen de previsualización de links (1200x630)
+  robots.ts             # robots.txt generado
+  sitemap.ts            # sitemap.xml generado
   api/contact/
     route.ts            # endpoint POST de captura de leads
     mailer.ts           # envío SMTP (aviso al negocio + auto-respuesta al lead)
@@ -276,8 +279,10 @@ components/
                         # pricing, contact, footer
 lib/
   utils.ts              # helper `cn()`
-  contact-limits.ts      # CONTACT_LIMITS: fuente única de los límites por campo
+  contact-limits.ts     # CONTACT_LIMITS: fuente única de los límites por campo
+  site.ts               # SITE: fuente única del dominio, nombre y textos públicos
 public/                 # logos de integraciones
+assets/                 # Geist-Regular.ttf, solo para /opengraph-image
 docs/                   # documentación operativa de la empresa
 ```
 
@@ -386,6 +391,19 @@ Requisitos del Rol 3, y criterio de aceptación del Rol 1. No los trates como op
 - Imágenes con dimensiones explícitas para evitar CLS.
 - Objetivo de Core Web Vitals: **LCP < 2.5s, INP < 200ms, CLS < 0.1**.
 - Analítica de Vercel montada **solo en producción** — no romper esa condición.
+- **El dominio sale de un solo lado:** `SITE.url` en `lib/site.ts`. Lo consumen
+  el `metadataBase` y el canonical de `layout.tsx`, el `sitemap.xml`, el
+  `robots.txt` y el JSON-LD. Si el dominio cambia y no cambian todos, el sitemap
+  termina apuntando a un host distinto del canonical y Google lo lee como
+  contenido duplicado. **No escribas `https://fuccina.com.ar` a mano en otro archivo.**
+- `app/sitemap.ts` y `app/robots.ts` los genera Next.js. El sitemap tiene **una
+  sola URL** a propósito: las secciones son anclas y el protocolo de sitemaps no
+  transporta fragmentos.
+- El JSON-LD (`components/site/structured-data.tsx`) declara solo
+  `Organization` con `name`, `url`, `slogan`, `description` y `logo`. **No
+  agregues `address`, `telephone`, `sameAs` ni `offers` sin confirmación
+  humana**: son datos que no están publicados, y `offers` volvería a duplicar
+  los precios en un segundo lugar.
 - **Costo de framer-motion, medido por build A/B (no estimado):** se compiló la
   landing dos veces, con y sin la librería, y se comprimió el bundle con gzip.
 
@@ -417,16 +435,16 @@ Requisitos del Rol 3, y criterio de aceptación del Rol 1. No los trates como op
 - ~~`next.config.mjs` tiene `typescript.ignoreBuildErrors: true`~~ — **resuelto**: la
   válvula se eliminó y el build valida tipos. Si reintroducís el flag, el build vuelve
   a pasar en verde con errores reales.
-- `next.config.mjs` tiene **`images.unoptimized: true`**, lo que penaliza el LCP. Es
-  aceptable en el diseño actual de imágenes servidas como asset local; evaluá
-  reintroducir la optimización si las imágenes crecen.
-- `package.json` todavía se llama `my-project`. Renombrar a `fuccina` es un cambio de bajo
-  riesgo pendiente de hacer.
-- **Falta la imagen de Open Graph.** `metadataBase` ya apunta a
-  `https://fuccina.com.ar` y el canonical está declarado, pero no hay un asset
-  1200×630 para la previsualización de links. Sin ella, Facebook/LinkedIn/X
-  muestran la tarjeta sin imagen. Crear `app/opengraph-image.tsx` (o un asset
-  en `public/`) es trabajo del Rol 2: la imagen es diseño.
+- `next.config.mjs` tiene **`images.unoptimized: true`**, lo que penaliza el LCP. Ver
+  la nota de abajo con el detalle medido.
+- ~~`package.json` todavía se llama `my-project`~~ — **resuelto**: ahora es `fuccina`.
+- ~~Falta la imagen de Open Graph~~ — **resuelto**: `app/opengraph-image.tsx` la
+  genera por código, 1200×630, con Geist desde `assets/`.
+- **`images.unoptimized: true` sigue pendiente y vale la pena revisarlo:** los
+  tres logos de integraciones pesan 67,6 kB en PNG (512×512, 320×320 y 640×480)
+  y se muestran a **36×36 px**. Con `next/image` optimizado bajarían a unos pocos
+  kB cada uno. Ojo: `sharp` no está instalado, así que hace falta en Vercel o
+  agregarlo como dependencia si el hosting es propio.
 - **Los enlaces del pie "Privacidad" y "Términos" apuntan a `#top`.** No hay páginas
   legales publicadas; crear `/privacidad` y `/terminos` es decisión de negocio.
 - **Los dos iconos de contacto del pie van al mismo `mailto:`.** Uno de los dos
