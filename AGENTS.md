@@ -191,7 +191,7 @@ Usarlas en lugar de reescribir el CSS a mano:
   todo control que se pulse con el dedo; los CTA primarios usan `min-h-12` (48px).
 - `.scroll-target` — `scroll-margin` para que el header fijo no tape el destino de un ancla.
 
-> **Regla de cascada — las utilidades de marca nuevas van en `@layer components`.**
+> **Regla de cascada — las utilidades de marca van en `@layer components`.**
 > Tailwind declara `@layer theme, base, components, utilities`, y el orden de las
 > capas gana sobre el orden del archivo. Una clase escrita suelta al final de
 > `globals.css` compite con cualquier utility en igualdad de especificidad y
@@ -201,12 +201,14 @@ Usarlas en lugar de reescribir el CSS a mano:
 > de marca, que es lo correcto: la clase da el valor por defecto y la utility
 > ajusta el caso puntual.
 >
-> **Consecuencia pendiente de revisar:** las clases del sistema visual que están
-> **fuera** de toda capa (`.panel`, `.bracket`, `.btn-outline`, `.field`, …)
-> ganan sobre cualquier utility que compita. Hoy eso deja código muerto: las
-> tarjetas de integraciones llevan `p-4 sm:px-4` en el JSX, pero `.panel`
-> impone `p-6 sm:p-8` después. No se movieron a `components` porque hacerlo
-> cambiaría el padding visible de esas tarjetas y eso es una decisión de diseño.
+> Efecto secundario que hay que tener presente: dentro de la capa, las utilities
+> **ganan** sobre la clase de marca. Por eso en las tarjetas de integraciones
+> el `p-4 sm:px-4` del JSX ahora manda sobre el `p-6 sm:p-8` de `.panel`. Es lo
+> que se pidió, pero si esas tarjetas se ven raras, el primer lugar donde mirar
+> es el padding, no `.panel`.
+>
+> **Al agregar una utilidad de marca nueva, va dentro de `@layer components`.**
+> Si queda suelta, el bug del botón reaparece.
 
 ### Movimiento
 

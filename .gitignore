@@ -36,7 +36,6 @@ logs/
 *.tsbuildinfo
 
 # Deployment and editor metadata
-.vercel/
 .vscode/
 .idea/
 *.swp
@@ -46,8 +45,9 @@ logs/
 .DS_Store
 Thumbs.db
 
-# IA files and directories
-.opencode
-.github
-opencode/
-github/
+# Agentes de IA
+# Solo la carpeta de definiciones de agentes. Importante: NO ignorar `.github/`
+# entero, porque ahi tambien viven los workflows de GitHub Actions, las
+# plantillas de issue/PR y CODEOWNERS, y eso si va al repo.
+.github/agents/
+.opencode/
