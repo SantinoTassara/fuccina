@@ -33,6 +33,7 @@ logs/
 .turbo/
 .eslintcache
 .tsbuildinfo
+*.tsbuildinfo
 
 # Deployment and editor metadata
 .vercel/

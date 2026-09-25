@@ -82,6 +82,8 @@ body {
   isolation: isolate;
 }
 
+/* El glow se deriva de --primary con color-mix: no mas hex hardcodeado,
+   asi el halo es siempre exactamente el mismo naranja que los CTA. */
 .title-glow::before {
   content: '';
   position: absolute;
@@ -90,14 +92,17 @@ body {
   width: 110%;
   height: 120%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse at center, rgba(251, 146, 60, 0.42) 0%, rgba(251, 146, 60, 0.18) 32%, rgba(251, 146, 60, 0) 72%);
+  background: radial-gradient(ellipse at center,
+    color-mix(in oklab, var(--primary) 42%, transparent) 0%,
+    color-mix(in oklab, var(--primary) 18%, transparent) 32%,
+    transparent 72%);
   filter: blur(46px);
   z-index: -1;
   pointer-events: none;
 }
 
 .module-card {
-  @apply rounded-2xl border border-white/10 bg-white/[.025] p-6 transition-all duration-300 hover:border-primary/30 hover:bg-white/[.04] sm:p-8;
+  @apply rounded-2xl border border-white/15 bg-white/[.025] p-6 transition-all duration-300 hover:border-primary/30 hover:bg-white/[.04] sm:p-8;
 }
 
 .icon-box {
@@ -105,10 +110,354 @@ body {
 }
 
 .module-number {
-  @apply font-mono text-[9px] tracking-[.18em] text-white/30;
+  @apply font-mono text-[9px] tracking-[.18em] text-muted-foreground;
 }
 
 .dashboard-shell {
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, .025), transparent 42%), linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px), linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px);
   background-size: auto, 32px 32px, 32px 32px;
+}
+
+/* ============================================================
+   SISTEMA VISUAL "TALLER" — variante de estilo
+   Idea: plano tecnico. Hairlines, corchetes de encuadre, grilla
+   visible y grano. Nada de negro plano.
+   ============================================================ */
+
+/* --- Escenario: fondo con profundidad en vez de negro muerto --- */
+.bg-stage {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 62% 48% at 10% -4%, color-mix(in oklab, var(--primary) 11%, transparent) 0%, transparent 62%),
+    radial-gradient(ellipse 46% 42% at 102% 6%, oklch(.52 .07 248 / .13) 0%, transparent 66%),
+    radial-gradient(ellipse 70% 50% at 50% 108%, color-mix(in oklab, var(--primary) 7%, transparent) 0%, transparent 70%);
+  background-repeat: no-repeat;
+}
+
+/* --- Grano: le da tactilidad y saca el aspecto de degradado plano --- */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --- Reglas verticales: el contenedor se lee como plano tecnico --- */
+.rules {
+  position: relative;
+}
+.rules::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  margin-inline: auto;
+  max-width: 72rem;
+  padding-inline: 1.25rem;
+  border-left: 1px solid color-mix(in oklab, var(--foreground) 5%, transparent);
+  border-right: 1px solid color-mix(in oklab, var(--foreground) 5%, transparent);
+}
+
+/* --- Firma de marca: corchetes de encuadre --- */
+.bracket {
+  position: relative;
+}
+.bracket::before,
+.bracket::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  border-color: color-mix(in oklab, var(--primary) 60%, transparent);
+  transition: all .4s cubic-bezier(.4, 0, .2, 1);
+}
+.bracket::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.bracket::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Al pasar el mouse, el encuadre se abre: la tarjeta se siente "encuadrada". */
+.bracket-hover:hover::before,
+.bracket-hover:hover::after {
+  width: 22px;
+  height: 22px;
+  border-color: var(--primary);
+}
+.bracket-hover:hover::before {
+  top: -5px;
+  left: -5px;
+}
+.bracket-hover:hover::after {
+  bottom: -5px;
+  right: -5px;
+}
+
+/* --- Panel: la tarjeta del sistema, con gradiente interno --- */
+.panel {
+  @apply relative rounded-2xl border border-white/15 p-6 transition-all duration-300 sm:p-8;
+  background-image: linear-gradient(180deg,
+    color-mix(in oklab, var(--foreground) 4%, transparent) 0%,
+    transparent 45%);
+}
+.panel-hover:hover {
+  border-color: color-mix(in oklab, var(--primary) 34%, transparent);
+  background-image: linear-gradient(180deg,
+    color-mix(in oklab, var(--primary) 7%, transparent) 0%,
+    transparent 55%);
+}
+
+/* --- Indice de seccion en formato de especificacion tecnica --- */
+.section-index {
+  @apply font-mono text-[10px] font-medium uppercase tracking-[.2em] text-muted-foreground;
+}
+.section-index::before,
+.section-index::after {
+  color: var(--primary);
+}
+.section-index::before {
+  content: '[';
+}
+.section-index::after {
+  content: ']';
+}
+
+/* --- Ritmo: una sola escala de titulo de seccion y de padding --- */
+.section-h2 {
+  @apply text-4xl font-semibold text-balance tracking-[-.04em] sm:text-5xl;
+}
+.section-pad {
+  @apply py-24 lg:py-32;
+}
+
+/* --- Boton: borde con contraste suficiente para leerse como control --- */
+.btn-outline {
+  @apply rounded-lg border border-white/35 text-foreground transition-colors hover:border-white/55 hover:bg-white/[.03];
+}
+
+/* --- Campo del formulario ---
+   `text-base` en móvil no es un capricho: por debajo de 16px, iOS Safari hace
+   zoom al enfocar el campo y el usuario pierde el sitio de la pantalla. En
+   escritorio vuelve al cuerpo de texto del sistema. `min-h-12` deja el área
+   táctil en 48px. */
+.field {
+  @apply min-h-12 rounded-lg border border-white/35 bg-black/20 px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary sm:text-sm;
+}
+
+/* ============================================================
+   OBJETIVOS TACTILES
+   44px es el minimo recomendado por iOS y Android Material para
+   un control que se pulsa con el dedo. Las utilidades de Tailwind
+   dejan el tamano al aire, asi que estos dos envoltorios fijan la
+   superficie sin tocar la escala tipografica ni el padding.
+
+   IMPORTANTE: van dentro de `@layer components` a proposito.
+
+   Tailwind declara `@layer theme, base, components, utilities`, y el
+   orden de las capas manda sobre el orden del archivo. Fuera de una
+   capa, estas reglas quedan al final de la hoja y ganan por orden de
+   fuente a cualquier utility que compita con la misma especificidad.
+   Eso rompia `md:hidden` del boton de menu: `.tap-icon` declaraba
+   `display: inline-flex` despues de `.md:hidden { display: none }`, y
+   el boton de movil se veia tambien en escritorio.
+
+   En `components`, cualquier utility de Tailwind pisa a la clase de
+   marca, que es justo lo que se espera: la clase da el valor por
+   defecto y la utility lo ajusta en el caso puntual.
+   ============================================================ */
+
+@layer components {
+  .tap-target {
+    @apply inline-flex min-h-11 items-center justify-center;
+  }
+
+  /* Para botones que son solo un icono: superficie cuadrada de 44px. */
+  .tap-icon {
+    @apply inline-flex h-11 w-11 shrink-0 items-center justify-center;
+  }
+
+  /* --- Anclas bajo la cabecera fija ---
+     Sin esto, al saltar a una seccion el heading queda tapado por el header. */
+  .scroll-target {
+    @apply scroll-mt-20 md:scroll-mt-24;
+  }
+}
+
+/* ============================================================
+   MOVIMIENTO
+   Reglas: solo se animan opacity y transform (capas de compositor).
+   Nada de animar box-shadow, filter o height en scroll: matan el hilo
+   principal. El reveal ocurre una vez y nunca vuelve a dispararse.
+   ============================================================ */
+
+:root {
+  /* Salida: entra rapido y frena largo. Es la sensacion de "llega". */
+  --motion-ease-out: cubic-bezier(.22, 1, .36, 1);
+  /* Entrada: sale lento y se va. Se usa cuando algo se va del DOM. */
+  --motion-ease-in: cubic-bezier(.4, 0, 1, 1);
+  --motion-fast: 160ms;
+  --motion-base: 300ms;
+  --motion-slow: 520ms;
+  --motion-reveal: 620ms;
+}
+
+/* --- Scroll reveal ---
+   El motor del reveal NO vive aca: es `components/site/reveal.tsx`, sobre
+   framer-motion. Aca solo viven los tokens, que ese componente no puede leer
+   (son CSS custom properties, no props). Si alguna vez hace falta animar
+   desde CSS, usar estas variables en vez de volver a escribir las curvas. */
+
+/* --- Hover de tarjeta: la ficha se levanta del plano --- */
+.panel-lift {
+  transition:
+    transform var(--motion-base) var(--motion-ease-out),
+    border-color var(--motion-base) var(--motion-ease-out),
+    background-color var(--motion-base) var(--motion-ease-out),
+    box-shadow var(--motion-base) var(--motion-ease-out);
+}
+
+/* Solo en dispositivos con hover real: en touch el estado se queda pegado. */
+@media (hover: hover) and (pointer: fine) {
+  .panel-lift:hover {
+    transform: translate3d(0, -4px, 0);
+    box-shadow: 0 18px 40px -24px color-mix(in oklab, var(--primary) 60%, transparent);
+  }
+  .panel-lift:hover .card-rule {
+    transform: scaleX(1);
+  }
+}
+
+/* El foco por teclado tiene que verse igual que el hover. Si no, la
+   navegacion por teclado pierde informacion que el mouse si tiene. */
+.panel-lift:focus-visible,
+a.panel-lift:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Regla superior: aparece de izquierda a derecha. */
+.card-rule {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-slow) var(--motion-ease-out);
+}
+
+/* ============================================================
+   ESTADOS DEL FORMULARIO
+   ============================================================ */
+
+.field-invalid {
+  border-color: var(--destructive);
+  background: color-mix(in oklab, var(--destructive) 8%, transparent);
+}
+.field-invalid:focus {
+  border-color: var(--destructive);
+}
+
+.field-msg {
+  @apply flex items-center gap-1.5 text-xs text-destructive;
+  animation: msg-in var(--motion-base) var(--motion-ease-out);
+}
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translate3d(0, -4px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Error de envio: el banner entra, no aparece de golpe. */
+.form-alert {
+  @apply flex items-start gap-3 rounded-lg border border-destructive/45 bg-destructive/10 p-4 text-left text-sm;
+  animation: msg-in var(--motion-base) var(--motion-ease-out);
+}
+
+/* Sacudida corta al rechazar el envio. 3 oscilaciones, no mas: a la
+   cuarta el usuario se enerva. */
+.shake {
+  animation: shake 420ms cubic-bezier(.36, .07, .19, .97);
+}
+@keyframes shake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  15% { transform: translate3d(-6px, 0, 0); }
+  35% { transform: translate3d(5px, 0, 0); }
+  55% { transform: translate3d(-3px, 0, 0); }
+  75% { transform: translate3d(2px, 0, 0); }
+}
+
+/* --- Enviando: el boton deja de pedir accion --- */
+.spinner {
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Enviado: el formulario se retira y entra la confirmacion --- */
+.form-out {
+  animation: form-out var(--motion-base) var(--motion-ease-in) forwards;
+}
+@keyframes form-out {
+  to { opacity: 0; transform: translate3d(0, -8px, 0); }
+}
+
+.success-in {
+  animation: success-in var(--motion-slow) var(--motion-ease-out);
+}
+@keyframes success-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* El sello de exito se dibuja despues de que entre el panel. */
+.success-mark {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: draw var(--motion-slow) var(--motion-ease-out) 180ms forwards;
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ============================================================
+   MOVIMIENTO REDUCIDO
+   No es una preferencia menor: sin esto, las transiciones de
+   opacidad y las sacudidas son un problema real para gente con
+   vestibulares. El contenido aparece, solo deja de moverse.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .panel-lift,
+  .card-rule,
+  .form-out,
+  .success-in,
+  .field-msg,
+  .form-alert,
+  .success-mark,
+  .shake {
+    animation: none;
+    transition: none;
+  }
+  .card-rule {
+    transform: scaleX(1);
+  }
+  .spinner {
+    animation: spin 1.6s linear infinite;
+  }
 }

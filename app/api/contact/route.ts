@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server'
+
+import { CONTACT_LIMITS } from '@/lib/contact-limits'
+
 import { sendContactEmails } from './mailer'
 
 type ContactPayload = {
@@ -20,9 +23,11 @@ type RateLimitEntry = {
 }
 
 const maxRequestBytes = 10_000
-const maxNameLength = 100
-const maxEmailLength = 254
-const maxMessageLength = 3_000
+// Los límites por campo vienen de la fuente compartida con el formulario
+// (`lib/contact-limits.ts`) para que cliente y servidor no puedan divergir.
+const maxNameLength = CONTACT_LIMITS.nombre
+const maxEmailLength = CONTACT_LIMITS.correo
+const maxMessageLength = CONTACT_LIMITS.mensaje
 const rateLimitWindowMs = 10 * 60 * 1_000
 const rateLimitMaxRequests = 5
 const requestsByIp = new Map<string, RateLimitEntry>()
