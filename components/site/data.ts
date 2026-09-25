@@ -1,13 +1,5 @@
 /**
  * Contenido de la landing.
- *
- * Vive en su propio módulo para que las Server Components lo importen sin
- * arrastrarlo al bundle del navegador, y para que el Client Component de la
- * navegación (`components/site/header.tsx`) pueda usar `navItems` sin importar
- * la página completa.
- *
- * Los datos de negocio (planes, integraciones) son reales: ver AGENTS.md §5.
- * No se inventan ni se modifican acá.
  */
 
 export type NavItem = {
@@ -76,5 +68,5 @@ export const plans: Plan[] = [
   },
 ]
 
-/** Pilares de la propuesta de valor, en el orden en que aparecen en el sitio. */
+
 export const pillars = ['Genera clientes', 'Recupera ganancia', 'Crea reputación']

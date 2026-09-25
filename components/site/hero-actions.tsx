@@ -6,14 +6,7 @@ import { ArrowRight, ChevronDown } from 'lucide-react'
 import { pillars } from '@/components/site/data'
 import { DURATION_BASE, EASE_OUT, STAGGER } from '@/components/site/motion'
 
-/**
- * Llamadas a la acción del hero más la fila de pilares.
- *
- * Se anima en el montaje y no con `whileInView` porque el bloque ya está en
- * pantalla al cargar. El `h1` y el párrafo no se animan a propósito: son el
- * elemento LCP y la propuesta de valor, y tienen que estar legibles en el
- * primer frame (ver `sections/hero.tsx`).
- */
+
 export function HeroActions() {
   return (
     <>

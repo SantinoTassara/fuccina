@@ -18,18 +18,7 @@ import { useBodyScrollLock } from '@/components/site/use-body-scroll-lock'
 /** Umbral del breakpoint `md` de Tailwind, en píxeles. */
 const DESKTOP_QUERY = '(min-width: 48rem)'
 
-/**
- * Cabecera fija con navegación.
- *
- * Es el único Client Component de la navegación porque el menú móvil necesita
- * estado. El resto de la landing es Server Component.
- *
- * Accesibilidad del panel:
- * - el botón declara `aria-expanded` y `aria-controls` apuntando al panel;
- * - `Escape` cierra y devuelve el foco al botón;
- * - el scroll del documento queda bloqueado mientras está abierto, y se
- *   restaura al pasar a escritorio por si se redimensiona la ventana.
- */
+
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const panelId = useId()
@@ -62,11 +51,7 @@ export function Header() {
     return () => desktop.removeEventListener('change', handleChange)
   }, [])
 
-  /**
-   * El scroll se libera antes de cerrar para que el salto al ancla funcione:
-   * con `overflow: hidden` en el body el navegador no puede desplazar la
-   * página hasta que el estilo vuelve a su valor original.
-   */
+  
   const handleNavClick = () => {
     releaseScroll()
     closeMenu()

@@ -11,16 +11,7 @@ type SubmitStatus = 'idle' | 'sending' | 'success' | 'error'
 type FieldName = 'nombre' | 'correo' | 'mensaje'
 type FieldErrors = Partial<Record<FieldName, string>>
 
-/**
- * Límites del endpoint, para poder avisar antes de enviar.
- *
- * `max` **no** está escrito acá: sale de `lib/contact-limits.ts`, que es la
- * fuente única que también consume `app/api/contact/route.ts`. Si el servidor
- * cambia un límite y el cliente no, el formulario deja de avisar lo que el
- * servidor va a rechazar y el único síntoma es un `400` sin explicación.
- * `min` sí es local: el endpoint exige que el campo no esté vacío, y eso no
- * necesita una constante compartida.
- */
+
 const LIMITS = {
   nombre: { min: 1, max: CONTACT_LIMITS.nombre },
   correo: { min: 1, max: CONTACT_LIMITS.correo },
@@ -29,7 +20,7 @@ const LIMITS = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-/** Valida los tres campos y devuelve un mensaje por campo, en español. */
+
 function validate(values: Record<string, string>): FieldErrors {
   const errors: FieldErrors = {}
 
@@ -46,7 +37,7 @@ function validate(values: Record<string, string>): FieldErrors {
   } else if (correo.length > LIMITS.correo.max) {
     errors.correo = `Ese correo es demasiado largo.`
   } else if (!EMAIL_RE.test(correo)) {
-    errors.correo = 'Revisá el correo: no parece una dirección válida.'
+    errors.correo = 'Correo invalido.'
   }
 
   const mensaje = values.mensaje?.trim() ?? ''
@@ -59,34 +50,6 @@ function validate(values: Record<string, string>): FieldErrors {
   return errors
 }
 
-/**
- * Formulario de captura de leads (`POST /api/contact`).
- *
- * El contrato con el endpoint no se toca: mismos `name` (`nombre`, `correo`,
- * `mensaje` y el honeypot `website`), mismo `fetch`, mismos `maxLength` y los
- * mismos estados anunciables. Ver AGENTS.md §6.
- *
- * Estados visuales, en el orden en que puede aparecerlos:
- *
- * 1. `idle`    — campos neutros. Foco: borde `primary`.
- * 2. `error`   — hay dos cosas distintas y no se mezclan:
- *                a) error de campo: borde `destructive`, mensaje bajo el input
- *                   con `AlertCircle`, `aria-invalid` y `aria-describedby`, y el
- *                   foco se mueve al primer campo roto para no obligar a
- *                   buscarlo a ojo;
- *                b) error de envío: banner con `role="alert"`, porque el
- *                   problema no está en un campo concreto sino en el ida y vuelta.
- * 3. `sending` — el botón se deshabilita, `aria-busy`, y muestra un spinner. El
- *                texto "Enviar correo" desaparece: un botón que cambia de ancho
- *                mientras se lo mira es ruido visual.
- * 4. `success` — el formulario sale, entra un panel de confirmación con `role="status"`
- *                y el foco se mueve ahí, que es lo que lee un lector de pantalla
- *                después de enviar.
- *
- * `noValidate` desactiva las burbujas nativas del navegador: son un popup del
- * sistema, no se pueden estilizar y aparecen en inglés en una página en español.
- * La validación vive acá, pero el servidor sigue validando igual.
- */
 export function ContactForm() {
   const [status, setStatus] = useState<SubmitStatus>('idle')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
@@ -97,7 +60,6 @@ export function ContactForm() {
 
   const sending = status === 'sending'
 
-  /** Lleva el foco al primer campo con error, o al panel de éxito. */
   function moveFocusTo(target?: string | null) {
     if (target === 'success') {
       successRef.current?.focus()
@@ -112,8 +74,6 @@ export function ContactForm() {
     const form = event.currentTarget
     const values = Object.fromEntries(new FormData(form).entries()) as Record<string, string>
 
-    // Validación previa: es más barato mostrar el error que hacer un request
-    // que el servidor va a rechazar con un 400.
     const errors = validate(values)
     setFieldErrors(errors)
     if (Object.keys(errors).length > 0) {
@@ -134,8 +94,7 @@ export function ContactForm() {
       })
 
       if (!response.ok) {
-        // 429 es el rate limit: el mensaje tiene que decir eso, porque la
-        // acción correcta es esperar, no reintentar en el acto.
+
         if (response.status === 429) {
           setFormError('Demasiados envíos desde esta conexión. Probá de nuevo en unos minutos.')
         } else if (response.status === 413) {
@@ -196,8 +155,7 @@ export function ContactForm() {
             </span>
             <p className="mt-5 text-base font-semibold text-foreground">Mensaje enviado</p>
             <p className="mt-2 max-w-sm text-pretty text-sm leading-6 text-muted-foreground">
-              Recibimos tu mensaje y te contactamos a la brevedad. Si es urgente, escribinos
-              directo por email.
+              Recibimos tu mensaje y te contactamos a la brevedad.
             </p>
           </m.div>
         ) : (

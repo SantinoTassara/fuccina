@@ -1,10 +1,6 @@
 import { Anvil } from 'lucide-react'
 
-/**
- * Logotipo de Fuccina. Sin `'use client'`: lo usan tanto la navegación
- * (Client Component) como el pie (Server Component), así que queda en el grafo
- * compartido sin arrastrar dependencias de servidor ni de cliente.
- */
+
 export function Logo() {
   return (
     <a href="#top" className="flex items-center gap-2" aria-label="Fuccina, ir al inicio">
