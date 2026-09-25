@@ -31,7 +31,10 @@ export const metadata: Metadata = {
       'Recuperá los carritos que ya se habían perdido, construí reputación y escalá tu e-commerce. Slancio y Faro, dos motores con un mismo objetivo.',
   },
   twitter: {
-    card: 'summary',
+    // `summary_large_image`, no `summary`: con la imagen de 1200x630 en su
+    // lugar, `summary` la muestra chica en la timeline y desperdicia el
+    // formato. Si algún día se saca `opengraph-image`, hay que volver a `summary`.
+    card: 'summary_large_image',
     title: 'Fuccina - La infraestructura invisible de tu crecimiento',
     description:
       'Recuperá los carritos que ya se habían perdido, construí reputación y escalá tu e-commerce.',

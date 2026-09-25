@@ -45,3 +45,9 @@ logs/
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# IA files and directories
+.opencode
+.github
+opencode/
+github/

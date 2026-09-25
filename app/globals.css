@@ -73,10 +73,13 @@ body {
   color: var(--foreground);
 }
 
+@layer components {
 .eyebrow {
   @apply flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[.18em] text-primary;
 }
+}
 
+@layer components {
 .title-glow {
   position: relative;
   isolation: isolate;
@@ -254,6 +257,7 @@ body {
 .field {
   @apply min-h-12 rounded-lg border border-white/35 bg-black/20 px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary sm:text-sm;
 }
+}
 
 /* ============================================================
    OBJETIVOS TACTILES
@@ -319,6 +323,7 @@ body {
    desde CSS, usar estas variables en vez de volver a escribir las curvas. */
 
 /* --- Hover de tarjeta: la ficha se levanta del plano --- */
+@layer components {
 .panel-lift {
   transition:
     transform var(--motion-base) var(--motion-ease-out),
@@ -326,8 +331,10 @@ body {
     background-color var(--motion-base) var(--motion-ease-out),
     box-shadow var(--motion-base) var(--motion-ease-out);
 }
+}
 
 /* Solo en dispositivos con hover real: en touch el estado se queda pegado. */
+@layer components {
 @media (hover: hover) and (pointer: fine) {
   .panel-lift:hover {
     transform: translate3d(0, -4px, 0);
@@ -337,15 +344,19 @@ body {
     transform: scaleX(1);
   }
 }
+}
 
 /* El foco por teclado tiene que verse igual que el hover. Si no, la
    navegacion por teclado pierde informacion que el mouse si tiene. */
+@layer components {
 .panel-lift:focus-visible,
 a.panel-lift:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
+}
 
+@layer components {
 /* Regla superior: aparece de izquierda a derecha. */
 .card-rule {
   position: absolute;
@@ -357,15 +368,19 @@ a.panel-lift:focus-visible {
   transform-origin: left;
   transition: transform var(--motion-slow) var(--motion-ease-out);
 }
+}
 
 /* ============================================================
    ESTADOS DEL FORMULARIO
    ============================================================ */
 
+@layer components {
 .field-invalid {
   border-color: var(--destructive);
   background: color-mix(in oklab, var(--destructive) 8%, transparent);
 }
+}
+@layer components {
 .field-invalid:focus {
   border-color: var(--destructive);
 }
@@ -432,6 +447,7 @@ a.panel-lift:focus-visible {
 @keyframes draw {
   to { stroke-dashoffset: 0; }
 }
+}
 
 /* ============================================================
    MOVIMIENTO REDUCIDO
@@ -439,6 +455,7 @@ a.panel-lift:focus-visible {
    opacidad y las sacudidas son un problema real para gente con
    vestibulares. El contenido aparece, solo deja de moverse.
    ============================================================ */
+@layer components {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -460,4 +477,5 @@ a.panel-lift:focus-visible {
   .spinner {
     animation: spin 1.6s linear infinite;
   }
+}
 }
