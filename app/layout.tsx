@@ -50,19 +50,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    // `data-scroll-behavior` le avisa a Next.js que la página usa scroll suave,
-    // para que pueda anularlo durante una navegación y el salto no se vea lento.
+
     <html lang="es" className="bg-background" data-scroll-behavior="smooth">
       <body className={`${geist.variable} ${geistMono.variable} antialiased`}>
-        {/*
-          Sin JavaScript, framer-motion no corre y los elementos marcados con
-          `data-motion-hidden` quedan en su estado inicial (`opacity: 0`).
-          Este estilo los vuelve visibles. `!important` hace falta para ganarle
-          al estilo inline que framer-motion escribe en el HTML.
-
-          La regla es: todo elemento animado que arranque oculto lleva el
-          atributo. Si olvidás marcarlo, desaparece sin JS.
-        */}
+        {}
         <noscript>
           <style>{'[data-motion-hidden]{opacity:1!important;transform:none!important}'}</style>
         </noscript>

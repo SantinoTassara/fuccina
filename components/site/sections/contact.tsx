@@ -3,10 +3,7 @@ import { Sparkles } from 'lucide-react'
 import { ContactForm } from '@/components/site/contact-form'
 import { Reveal } from '@/components/site/reveal'
 
-/**
- * Llamada a la acción final. Server Component: el formulario interactivo queda
- * aislado en `ContactForm`.
- */
+
 export function ContactSection() {
   return (
     <section

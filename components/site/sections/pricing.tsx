@@ -3,11 +3,7 @@ import { ArrowRight, CircleCheck } from 'lucide-react'
 import { plans } from '@/components/site/data'
 import { Reveal } from '@/components/site/reveal'
 
-/**
- * Planes publicados. Los precios y los límites son datos reales: ver AGENTS.md §5.
- *
- * Server Component.
- */
+
 export function PricingSection() {
   return (
     <section id="precios" className="scroll-target section-pad">

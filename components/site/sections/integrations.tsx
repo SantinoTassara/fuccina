@@ -3,12 +3,7 @@ import Image from 'next/image'
 import { integrationLogos } from '@/components/site/data'
 import { Reveal } from '@/components/site/reveal'
 
-/**
- * Integraciones: Shopify, TiendaNube y Google Analytics.
- *
- * Server Component. Las imágenes van por `next/image` con `width`/`height`
- * explícitos, así que el navegador reserva el espacio y no hay CLS.
- */
+
 export function IntegrationsSection() {
   return (
     <section id="integraciones" className="scroll-target section-pad">

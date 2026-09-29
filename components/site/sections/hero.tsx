@@ -1,20 +1,6 @@
 import { HeroActions } from '@/components/site/hero-actions'
 
-/**
- * Hero de la landing.
- *
- * Server Component: sólo el bloque de CTAs necesita estado de animación, y ese
- * vive en `HeroActions`.
- *
- * El `h1` y el párrafo **no** llevan animación de entrada a propósito:
- * 1. son el elemento LCP de la página, y arrancar en `opacity: 0` retrasa el
- *    momento en que el navegador lo registra como pintado;
- * 2. son la propuesta de valor: tiene que estar legible en el primer frame,
- *    sin depender de que una animación termine.
- *
- * La sección tampoco usa `whileInView`: está en pantalla al cargar, así que
- * alcanzaría a animar y quedaría congelada en un estado que no aporta nada.
- */
+
 export function HeroSection() {
   return (
     <section className="relative mx-auto max-w-6xl px-5 pb-20 pt-36 lg:px-8 lg:pb-28 lg:pt-48">

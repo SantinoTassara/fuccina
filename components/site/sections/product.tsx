@@ -2,13 +2,7 @@ import { ArrowRight, ShoppingCart, Star } from 'lucide-react'
 
 import { Reveal } from '@/components/site/reveal'
 
-/**
- * Bloque de producto: Slancio (01) y Faro (02).
- *
- * Server Component. El contenido llega al HTML del servidor y las animaciones
- * de framer-motion se aplican sobre contenedores, así que el texto sigue
- * disponible para crawlers y lectores de pantalla.
- */
+
 export function ProductSection() {
   return (
     <section id="producto" className="scroll-target section-pad border-y border-white/8">
